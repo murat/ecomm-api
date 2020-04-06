@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 source 'https://rubygems.org'
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
@@ -22,6 +23,25 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+
+  gem 'rubocop-rails'
+  gem 'awesome_print'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+
+  # Test
+  gem 'rubocop-rspec', require: false
+  gem 'rspec-rails', '~> 3.8'
+  gem 'faker'
+  gem 'factory_bot_rails'
+end
+
+group :test do
+  gem 'database_cleaner'
+  gem 'shoulda-matchers', '~> 3.1', require: false
+
+  gem 'simplecov', require: false
+  gem 'simplecov-console', require: false
 end
 
 group :development do
