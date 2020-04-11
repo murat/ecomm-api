@@ -19,20 +19,12 @@ module Api::V1
     def create
       @category = Category.new(category_params)
 
-      if @category.save
-        render json: @category, status: :created, location: @category
-      else
-        render json: @category.errors, status: :unprocessable_entity
-      end
+      render json: @category, status: :created if @category.save!
     end
 
     # PATCH/PUT /categories/1
     def update
-      if @category.update(category_params)
-        render json: @category
-      else
-        render json: @category.errors, status: :unprocessable_entity
-      end
+      render json: @category if @category.update!(category_params)
     end
 
     # DELETE /categories/1

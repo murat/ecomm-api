@@ -1,5 +1,10 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should belong_to(:brand) }
+  it { should belong_to(:category) }
+  it { should have_many(:specifications).dependent(:destroy) }
+
+  it { should validate_presence_of(:name) }
 end

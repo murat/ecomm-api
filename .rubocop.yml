@@ -4,15 +4,20 @@ require:
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
-  - 'spec/**/*'
-  - 'db/**/*'
-  - 'config/**/*'
-  - 'bin/*'
-  - 'Rakefile'
-  - 'vendor/**/*'
+    - 'db/schema.rb'
+    - 'config/**/*'
+    - 'bin/*'
+    - 'Rakefile'
+    - 'vendor/**/*'
 
 Bundler/OrderedGems:
   Enabled: false
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent

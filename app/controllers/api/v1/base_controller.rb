@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api::V1
   class BaseController < ActionController::API
+    include ErrorHandler
+
     before_action :doorkeeper_authorize!
 
     respond_to :json

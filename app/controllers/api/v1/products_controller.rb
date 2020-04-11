@@ -19,20 +19,12 @@ module Api::V1
     def create
       @product = Product.new(product_params)
 
-      if @product.save
-        render json: @product, status: :created, location: @product
-      else
-        render json: @product.errors, status: :unprocessable_entity
-      end
+      render json: @product, status: :created if @product.save!
     end
 
     # PATCH/PUT /products/1
     def update
-      if @product.update(product_params)
-        render json: @product
-      else
-        render json: @product.errors, status: :unprocessable_entity
-      end
+      render json: @product if @product.update!(product_params)
     end
 
     # DELETE /products/1

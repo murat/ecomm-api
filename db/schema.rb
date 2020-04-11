@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_205954) do
+ActiveRecord::Schema.define(version: 2020_04_07_163019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2020_04_06_205954) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["ancestry"], name: "index_categories_on_ancestry"
   end
 
   create_table "images", force: :cascade do |t|
@@ -84,12 +85,26 @@ ActiveRecord::Schema.define(version: 2020_04_06_205954) do
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
-    t.bigint "brand_id", null: false
-    t.bigint "category_id", null: false
+    t.bigint "brand_id"
+    t.bigint "category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["brand_id"], name: "index_products_on_brand_id"
     t.index ["category_id"], name: "index_products_on_category_id"
+  end
+
+  create_table "specifications", force: :cascade do |t|
+    t.bigint "product_id"
+    t.integer "position"
+    t.string "spec_key"
+    t.string "spec_val"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["position"], name: "index_specifications_on_position"
+    t.index ["product_id"], name: "index_specifications_on_product_id"
+    t.index ["spec_key", "product_id"], name: "index_specifications_on_spec_key_and_product_id", unique: true
+    t.index ["spec_key"], name: "index_specifications_on_spec_key"
+    t.index ["spec_val"], name: "index_specifications_on_spec_val"
   end
 
   create_table "users", force: :cascade do |t|
@@ -118,4 +133,5 @@ ActiveRecord::Schema.define(version: 2020_04_06_205954) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "categories"
+  add_foreign_key "specifications", "products"
 end

@@ -19,20 +19,12 @@ module Api::V1
     def create
       @brand = Brand.new(brand_params)
 
-      if @brand.save
-        render json: @brand, status: :created, location: @brand
-      else
-        render json: @brand.errors, status: :unprocessable_entity
-      end
+      render json: @brand, status: :created if @brand.save!
     end
 
     # PATCH/PUT /brands/1
     def update
-      if @brand.update(brand_params)
-        render json: @brand
-      else
-        render json: @brand.errors, status: :unprocessable_entity
-      end
+      render json: @brand if @brand.update!(brand_params)
     end
 
     # DELETE /brands/1
