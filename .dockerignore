@@ -1,0 +1,31 @@
+# ignore git folder
+/.git
+
+# ignore editor/IDE files
+/.vscode
+/.idea
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/cache/*
+/tmp/letter_opener/*
+/tmp/sockets/*
+
+.byebug_history
+
+# ignore docker files
+/docker-compose.yml
+/.dockerignore
+/Dockerfile
+
+# ignore env files
+.env
+.env*
+
+README.md
+CHANGELOG.md
+.editorconfig
+.rubocop.yml

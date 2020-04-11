@@ -52,7 +52,7 @@ module ErrorHandler
     if backtrace_size >= 2 then max_range = 2
     elsif backtrace_size >= 1 then max_range = 1
     end
-    if max_range > 0
+    if max_range.positive?
       s = "#{exception.message} - #{exception.backtrace[0..max_range]}"
       logger.error s
     end

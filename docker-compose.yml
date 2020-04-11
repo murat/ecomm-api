@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  database:
+    container_name: ecomm-db
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ecomm
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  app:
+    container_name: ecomm-db
+    image: ecomm-api:latest
+    build:
+      context: .
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:secret@database:5432/ecomm
+    links:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 3000 || exit 1"]
+      interval: 5m
+      start_period: 1m
+    ports:
+      - '8080:3000'
+    volumes:
+      - .:/app

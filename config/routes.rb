@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   use_doorkeeper
 
+  get :health, to: 'health#index'
+
   namespace :api do
     namespace :v1 do
       get :account, to: 'accounts#show'

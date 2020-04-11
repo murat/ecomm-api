@@ -36,6 +36,7 @@ Metrics/AbcSize:
   Max: 100
 
 Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
   Max: 35
 
 Metrics/BlockNesting:
