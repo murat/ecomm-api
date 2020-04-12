@@ -44,7 +44,9 @@ module Api::V1
 
     # Only allow a trusted parameter "white list" through.
     def product_params
-      params.require(:product).permit(:name, :description, :brand_id, :category_id)
+      params.require(:product).permit(:name, :description, :price, :brand_id, :category_id,
+                                      discounts_attributes: [:id, :discount, :start_time, :end_time, :_destroy],
+                                      specifications_attributes: [:id, :spec_key, :spec_val, :_destroy])
     end
   end
 end

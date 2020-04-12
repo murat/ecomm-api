@@ -2,7 +2,7 @@
 FactoryBot.define do
   factory :specification do
     product
-    sequence(:position) { n }
+    sequence(:position) { |n| n }
     spec_key { Faker::Lorem.word }
     spec_val { Faker::Lorem.word }
   end
