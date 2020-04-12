@@ -3,7 +3,8 @@ require 'rails_helper'
 
 RSpec.describe 'Products', type: :request do
   let!(:user) { FactoryBot.create(:user) }
-  let!(:token) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
+  let!(:public_access) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
+  let!(:sudo_access) { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'sudo') }
   let!(:products) { FactoryBot.create_list(:product, 10) }
   let!(:product) { products.first }
   let!(:product_params) { FactoryBot.attributes_for(:product) }
@@ -17,7 +18,7 @@ RSpec.describe 'Products', type: :request do
     end
 
     it 'works!' do
-      get api_v1_products_path, params: {}, headers: { authorization: "Bearer #{token.token}" }
+      get api_v1_products_path, params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).length).to eq(10)
@@ -25,15 +26,21 @@ RSpec.describe 'Products', type: :request do
   end
 
   describe 'POST /api/v1/products' do
+    it 'returns unauthorized without sudo token' do
+      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{public_access.token}" }
+
+      expect(response).to have_http_status(403)
+    end
+
     it 'works with valid params' do
-      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{token.token}" }
+      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(201)
       expect(JSON.parse(response.body).dig('name')).to eq(product_params[:name])
     end
 
     it 'does not works with invalid params' do
-      post api_v1_products_path, params: { product: invalid_product_params }, headers: { authorization: "Bearer #{token.token}" }
+      post api_v1_products_path, params: { product: invalid_product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -42,13 +49,13 @@ RSpec.describe 'Products', type: :request do
 
   describe 'GET /api/v1/products/:id' do
     it 'returns not found if record does not exist' do
-      get api_v1_product_path(0), params: {}, headers: { authorization: "Bearer #{token.token}" }
+      get api_v1_product_path(0), params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(404)
     end
 
     it 'works!' do
-      get api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{token.token}" }
+      get api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).dig('name')).to eq(product.name)
@@ -56,31 +63,21 @@ RSpec.describe 'Products', type: :request do
   end
 
   describe 'PUT /api/v1/products/:id' do
+    it 'returns unauthorized without sudo token' do
+      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{public_access.token}" }
+
+      expect(response).to have_http_status(403)
+    end
+
     it 'works with valid params' do
-      put api_v1_product_path(product), params: { product: product_params }, headers: { authorization: "Bearer #{token.token}" }
+      put api_v1_product_path(product), params: { product: product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).dig('name')).to eq(product_params[:name])
     end
 
     it 'does not works with valid params' do
-      put api_v1_product_path(product), params: { product: invalid_product_params }, headers: { authorization: "Bearer #{token.token}" }
-
-      expect(response).to have_http_status(422)
-      expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
-    end
-  end
-
-  describe 'PUT /api/v1/products/:id' do
-    it 'works with valid params' do
-      put api_v1_product_path(product), params: { product: product_params }, headers: { authorization: "Bearer #{token.token}" }
-
-      expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).dig('name')).to eq(product_params[:name])
-    end
-
-    it 'does not works with valid params' do
-      put api_v1_product_path(product), params: { product: invalid_product_params }, headers: { authorization: "Bearer #{token.token}" }
+      put api_v1_product_path(product), params: { product: invalid_product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -88,8 +85,14 @@ RSpec.describe 'Products', type: :request do
   end
 
   describe 'DELETE /api/v1/products/:id' do
+    it 'returns unauthorized without sudo token' do
+      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{public_access.token}" }
+
+      expect(response).to have_http_status(403)
+    end
+
     it 'returns no content if record was exist' do
-      delete api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{token.token}" }
+      delete api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(204)
     end

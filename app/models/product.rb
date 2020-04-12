@@ -6,4 +6,5 @@ class Product < ApplicationRecord
   has_many :specifications, dependent: :destroy
 
   validates :name, presence: true
+  validates :price, presence: true
 end

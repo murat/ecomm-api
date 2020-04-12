@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Accounts', type: :request do
   let!(:user) { FactoryBot.create(:user) }
-  let!(:token) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
+  let!(:public_access) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
 
   describe 'GET /api/v1/account' do
     it 'returns unauthorized if header does not exist.' do
@@ -12,7 +12,7 @@ RSpec.describe 'Api::V1::Accounts', type: :request do
     end
 
     it 'works!' do
-      get api_v1_account_path, params: {}, headers: { authorization: "Bearer #{token.token}" }
+      get api_v1_account_path, params: {}, headers: { authorization: "Bearer #{public_access.token}" }
       expect(response).to have_http_status(200)
     end
   end

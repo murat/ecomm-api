@@ -3,5 +3,6 @@ FactoryBot.define do
   factory :access_token, class: 'Doorkeeper::AccessToken' do
     application { nil }
     resource_owner_id { FactoryBot.create(:user).id }
+    scopes { 'public' }
   end
 end

@@ -3,11 +3,19 @@ module Api::V1
   class BaseController < ActionController::API
     include ErrorHandler
 
-    before_action :doorkeeper_authorize!
+    before_action :public_authorization
 
     respond_to :json
 
     private
+
+    def public_authorization
+      doorkeeper_authorize!
+    end
+
+    def sudo_authorization
+      doorkeeper_authorize!(:sudo)
+    end
 
     # Find the user that owns the access token
     def current_resource_owner
