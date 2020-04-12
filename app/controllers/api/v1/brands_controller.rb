@@ -10,24 +10,23 @@ module Api::V1
     def index
       @brands = Brand.all
 
-      render json: @brands
+      render_with_meta(@brands.page(params[:page]).per(params[:per]), paginated: true, total: @brands.count)
     end
 
     # GET /brands/1
     def show
-      render json: @brand
+      render_with_meta(@brand)
     end
 
     # POST /brands
     def create
       @brand = Brand.new(brand_params)
-
-      render json: @brand, status: :created if @brand.save!
+      render_with_meta(@brand, status: :created) if @brand.save!
     end
 
     # PATCH/PUT /brands/1
     def update
-      render json: @brand if @brand.update!(brand_params)
+      render_with_meta(@brand, status: :ok) if @brand.update!(brand_params)
     end
 
     # DELETE /brands/1

@@ -10,24 +10,24 @@ module Api::V1
     def index
       @products = Product.all
 
-      render json: @products
+      render_with_meta(@products.page(params[:page]).per(params[:per]), paginated: true, total: @products.count)
     end
 
     # GET /products/1
     def show
-      render json: @product
+      render_with_meta(@product)
     end
 
     # POST /products
     def create
       @product = Product.new(product_params)
 
-      render json: @product, status: :created if @product.save!
+      render_with_meta(@product, status: :created) if @product.save!
     end
 
     # PATCH/PUT /products/1
     def update
-      render json: @product if @product.update!(product_params)
+      render_with_meta(@product) if @product.update!(product_params)
     end
 
     # DELETE /products/1

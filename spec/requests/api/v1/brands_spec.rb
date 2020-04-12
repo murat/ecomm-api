@@ -21,7 +21,7 @@ RSpec.describe 'Brands', type: :request do
       get api_v1_brands_path, params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).length).to eq(10)
+      expect(JSON.parse(response.body).dig('data').length).to eq(10)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe 'Brands', type: :request do
       post api_v1_brands_path, params: { brand: brand_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(201)
-      expect(JSON.parse(response.body).dig('name')).to eq(brand_params[:name])
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(brand_params[:name])
     end
 
     it 'does not works with invalid params' do
@@ -58,7 +58,7 @@ RSpec.describe 'Brands', type: :request do
       get api_v1_brand_path(brand), params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).dig('name')).to eq(brand.name)
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(brand.name)
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe 'Brands', type: :request do
       put api_v1_brand_path(brand), params: { brand: brand_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).dig('name')).to eq(brand_params[:name])
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(brand_params[:name])
     end
 
     it 'does not works with valid params' do

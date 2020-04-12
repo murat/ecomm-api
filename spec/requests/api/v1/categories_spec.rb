@@ -21,7 +21,7 @@ RSpec.describe 'Categories', type: :request do
       get api_v1_categories_path, params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).length).to eq(10)
+      expect(JSON.parse(response.body).dig('data').length).to eq(10)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe 'Categories', type: :request do
       post api_v1_categories_path, params: { category: category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(201)
-      expect(JSON.parse(response.body).dig('name')).to eq(category_params[:name])
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(category_params[:name])
     end
 
     it 'does not works with invalid params' do
@@ -58,7 +58,7 @@ RSpec.describe 'Categories', type: :request do
       get api_v1_category_path(category), params: {}, headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).dig('name')).to eq(category.name)
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(category.name)
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe 'Categories', type: :request do
       put api_v1_category_path(category), params: { category: category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
 
       expect(response).to have_http_status(200)
-      expect(JSON.parse(response.body).dig('name')).to eq(category_params[:name])
+      expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(category_params[:name])
     end
 
     it 'does not works with valid params' do

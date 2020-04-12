@@ -10,24 +10,23 @@ module Api::V1
     def index
       @categories = Category.all
 
-      render json: @categories
+      render_with_meta(@categories.page(params[:page]).per(params[:per]), paginated: true, total: @categories.count)
     end
 
     # GET /categories/1
     def show
-      render json: @category
+      render_with_meta(@category)
     end
 
     # POST /categories
     def create
       @category = Category.new(category_params)
-
-      render json: @category, status: :created if @category.save!
+      render_with_meta(@category, status: :created) if @category.save!
     end
 
     # PATCH/PUT /categories/1
     def update
-      render json: @category if @category.update!(category_params)
+      render_with_meta(@category) if @category.update!(category_params)
     end
 
     # DELETE /categories/1
