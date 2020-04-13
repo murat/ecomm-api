@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       resources :brands, except: %i(new edit)
       resources :categories, except: %i(new edit)
       resources :products, except: %i(new edit)
+
+      get :cart, to: 'carts#show'
     end
   end
 end

@@ -15,6 +15,8 @@ class User < ApplicationRecord
            foreign_key: :resource_owner_id,
            dependent: :delete_all
 
+  has_one :cart, dependent: :destroy
+
   validates :name, presence: true
   validates :surname, presence: true
   validates :phone, presence: true
