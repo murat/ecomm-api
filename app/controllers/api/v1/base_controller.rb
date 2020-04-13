@@ -39,7 +39,7 @@ module Api::V1
       data = if serializer_klass
                serializer_klass.new(
                  data,
-                 includes: opts.fetch(:includes) { [] }
+                 include: opts.fetch(:include) { [] }
                )
              else
                { data: data }

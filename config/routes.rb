@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :products, except: %i(new edit)
 
       get :cart, to: 'carts#show'
+      post :'cart/insert', to: 'carts#insert'
     end
   end
 end
