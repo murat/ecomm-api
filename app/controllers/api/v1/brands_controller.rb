@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module Api::V1
   class BrandsController < Api::V1::BaseController
-    skip_before_action :public_authorization, only: [:create, :update, :destroy]
-    before_action :sudo_authorization, only: [:create, :update, :destroy]
+    skip_before_action :authorization, only: [:create, :update, :destroy]
+    before_action :admin_authorization, only: [:create, :update, :destroy]
 
     before_action :set_brand, only: [:show, :update, :destroy]
 

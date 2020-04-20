@@ -3,7 +3,7 @@ module Api::V1
   class BaseController < ActionController::API
     include ErrorHandler
 
-    before_action :public_authorization
+    before_action :authorize_request
 
     respond_to :json
 
@@ -51,12 +51,8 @@ module Api::V1
 
     private
 
-    def public_authorization
-      doorkeeper_authorize!
-    end
-
-    def sudo_authorization
-      doorkeeper_authorize!(:sudo)
+    def authorize_request(scope = :public)
+      doorkeeper_authorize! scope
     end
 
     # Find the user that owns the access token

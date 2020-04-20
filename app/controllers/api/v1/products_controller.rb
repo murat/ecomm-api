@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 module Api::V1
   class ProductsController < Api::V1::BaseController
-    skip_before_action :public_authorization, only: [:create, :update, :destroy]
-    before_action :sudo_authorization, only: [:create, :update, :destroy]
-
+    prepend_before_action -> { authorize_request(:admin) }, only: [:create, :update, :destroy]
     before_action :set_product, only: [:show, :update, :destroy]
 
     # GET /products
