@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 module Api::V1
   class ProductsController < Api::V1::BaseController
-    prepend_before_action -> { authorize_request(:admin) }, only: [:create, :update, :destroy]
+    before_action -> { doorkeeper_authorize! }, only: [:index, :show]
+    before_action only: [:create, :update, :destroy] do
+      doorkeeper_authorize! :admin
+    end
+
     before_action :set_product, only: [:show, :update, :destroy]
 
     # GET /products

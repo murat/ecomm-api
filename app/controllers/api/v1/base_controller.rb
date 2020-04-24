@@ -3,8 +3,6 @@ module Api::V1
   class BaseController < ActionController::API
     include ErrorHandler
 
-    before_action :authorize_request
-
     respond_to :json
 
     def render_with_meta(data, opts = {})
@@ -50,10 +48,6 @@ module Api::V1
     end
 
     private
-
-    def authorize_request(scope = :public)
-      doorkeeper_authorize! scope
-    end
 
     # Find the user that owns the access token
     def current_resource_owner

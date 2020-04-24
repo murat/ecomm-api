@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 module Api::V1
   class CategoriesController < Api::V1::BaseController
-    skip_before_action :authorization, only: [:create, :update, :destroy]
-    before_action :admin_authorization, only: [:create, :update, :destroy]
+    before_action -> { doorkeeper_authorize! }, only: [:index, :show]
+    before_action only: [:create, :update, :destroy] do
+      doorkeeper_authorize! :admin
+    end
 
     before_action :set_category, only: [:show, :update, :destroy]
 

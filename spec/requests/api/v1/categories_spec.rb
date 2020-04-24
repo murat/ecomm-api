@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe 'Categories', type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let!(:public_access) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
-  let!(:sudo_access) { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'sudo') }
+  let!(:admin_access) { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'admin') }
   let!(:categories) { FactoryBot.create_list(:category, 10) }
   let!(:category) { categories.first }
   let!(:category_params) { FactoryBot.attributes_for(:category) }
@@ -33,14 +33,14 @@ RSpec.describe 'Categories', type: :request do
     end
 
     it 'works with valid params' do
-      post api_v1_categories_path, params: { category: category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      post api_v1_categories_path, params: { category: category_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(201)
       expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(category_params[:name])
     end
 
     it 'does not works with invalid params' do
-      post api_v1_categories_path, params: { category: invalid_category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      post api_v1_categories_path, params: { category: invalid_category_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -70,14 +70,14 @@ RSpec.describe 'Categories', type: :request do
     end
 
     it 'works with valid params' do
-      put api_v1_category_path(category), params: { category: category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      put api_v1_category_path(category), params: { category: category_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(category_params[:name])
     end
 
     it 'does not works with valid params' do
-      put api_v1_category_path(category), params: { category: invalid_category_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      put api_v1_category_path(category), params: { category: invalid_category_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -92,7 +92,7 @@ RSpec.describe 'Categories', type: :request do
     end
 
     it 'returns no content if record was exist' do
-      delete api_v1_category_path(category), params: {}, headers: { authorization: "Bearer #{sudo_access.token}" }
+      delete api_v1_category_path(category), params: {}, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(204)
     end

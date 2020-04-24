@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe 'Products', type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let!(:public_access) { FactoryBot.create(:access_token, resource_owner_id: user.id) }
-  let!(:sudo_access) { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'sudo') }
+  let!(:admin_access) { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'admin') }
   let!(:products) { FactoryBot.create_list(:product, 10) }
   let!(:product) { products.first }
   let!(:product_params) { FactoryBot.attributes_for(:product, :with_specifications, :with_discount) }
@@ -33,7 +33,7 @@ RSpec.describe 'Products', type: :request do
     end
 
     it 'works with valid params' do
-      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      post api_v1_products_path, params: { product: product_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(201)
       expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(product_params[:name])
@@ -42,7 +42,7 @@ RSpec.describe 'Products', type: :request do
     end
 
     it 'does not works with invalid params' do
-      post api_v1_products_path, params: { product: invalid_product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      post api_v1_products_path, params: { product: invalid_product_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -72,14 +72,14 @@ RSpec.describe 'Products', type: :request do
     end
 
     it 'works with valid params' do
-      put api_v1_product_path(product), params: { product: product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      put api_v1_product_path(product), params: { product: product_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).dig('data', 'attributes', 'name')).to eq(product_params[:name])
     end
 
     it 'does not works with valid params' do
-      put api_v1_product_path(product), params: { product: invalid_product_params }, headers: { authorization: "Bearer #{sudo_access.token}" }
+      put api_v1_product_path(product), params: { product: invalid_product_params }, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(422)
       expect(JSON.parse(response.body).dig('errors')).to_not eq(nil)
@@ -94,7 +94,7 @@ RSpec.describe 'Products', type: :request do
     end
 
     it 'returns no content if record was exist' do
-      delete api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{sudo_access.token}" }
+      delete api_v1_product_path(product), params: {}, headers: { authorization: "Bearer #{admin_access.token}" }
 
       expect(response).to have_http_status(204)
     end
