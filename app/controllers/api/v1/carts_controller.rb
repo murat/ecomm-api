@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 module Api::V1
   class CartsController < Api::V1::BaseController
+    before_action -> { doorkeeper_authorize! }
     before_action :set_cart
 
     # GET /cart
     def show
-      render_with_meta(@cart.carts_products, include: [:product])
+      render_with_meta(@cart.carts_products, include: [:product, :'product.brand', :'product.category'])
     end
 
     # POST /cart/insert

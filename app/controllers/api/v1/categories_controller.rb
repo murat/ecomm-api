@@ -12,7 +12,12 @@ module Api::V1
     def index
       @categories = Category.all
 
-      render_with_meta(@categories.page(params[:page]).per(params[:per]), paginated: true, total: @categories.count)
+      if params[:style] == 'raw'
+        render json: { data: @categories.roots.map(&->(c) { c.subtree.arrange_serializable }).flatten }, status: :ok
+        return
+      end
+
+      render_with_meta(@categories.page(params[:page]).per(params[:per]), paginated: true, include: [:children], total: @categories.count)
     end
 
     # GET /categories/1
