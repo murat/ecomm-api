@@ -16,6 +16,8 @@ class User < ApplicationRecord
            dependent: :delete_all
 
   has_one :cart, dependent: :destroy
+  has_many :addresses, dependent: :destroy
+  has_many :orders, dependent: :destroy
 
   validates :name, presence: true
   validates :surname, presence: true

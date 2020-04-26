@@ -5,4 +5,3 @@ class Specification < ApplicationRecord
   validates :spec_key, presence: true, uniqueness: { scope: :product_id, case_sensitive: false }
   validates :spec_val, presence: true
 end
-\

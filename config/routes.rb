@@ -20,8 +20,10 @@ Rails.application.routes.draw do
       resources :categories, except: %i(new edit)
       resources :products, except: %i(new edit)
 
+      resources :addresses, except: %i(new edit)
       get :cart, to: 'carts#show'
       post :'cart/insert', to: 'carts#insert'
+      resources :orders, except: %i(new edit destroy)
     end
   end
 end

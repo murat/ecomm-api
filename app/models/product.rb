@@ -9,6 +9,9 @@ class Product < ApplicationRecord
   has_many :discounts, inverse_of: :product, dependent: :destroy
   accepts_nested_attributes_for :discounts, allow_destroy: true
 
+  has_many :orders_products, dependent: :restrict_with_error
+  has_many :orders, through: :orders_products
+
   validates :name, presence: true
   validates :price, presence: true
 end
