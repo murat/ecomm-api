@@ -19,7 +19,27 @@ module Api::V1
     # POST /orders
     def create
       # TODO: implement this
-      @order = Order.new(order_params.merge(user_id: current_user.id, order_no: 'Order.next_order_no', status: 'pending'))
+      @order = Order.new
+      ActiveRecord::Base.transaction do
+        @order.assign_attributes(order_params.merge(
+                                   user_id: current_user.id,
+                                   order_no: @order.next_order_no,
+                                   status: 'pending'
+                                 ))
+        products = current_user.cart.carts_products
+        raise 'there is no product in the cart' if products.count.zero?
+
+        @order.save!
+        products.each do |p|
+          OrdersProduct.create(order: @order,
+                               product: p.product,
+                               amount: p.amount,
+                               price: p.product.discounted_price)
+        end
+
+        current_user.cart.products.clear
+      end
+
       render_with_meta(@order, status: :created) if @order.save!
     end
 

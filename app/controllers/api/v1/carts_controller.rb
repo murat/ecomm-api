@@ -20,9 +20,10 @@ module Api::V1
           exist = @cart.carts_products.find_by(product_id: @product.id)
           exist.update(amount: exist.amount + params[:amount])
         else
-          @cart.products << @product
+          CartsProduct.create(cart: @cart, product: @product, amount: params[:amount])
         end
 
+        # @todo: think about it:
         @product.update(stock_count: (@product.stock_count - params[:amount]))
       end
 

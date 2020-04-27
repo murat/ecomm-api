@@ -14,4 +14,10 @@ class Product < ApplicationRecord
 
   validates :name, presence: true
   validates :price, presence: true
+
+  def discounted_price
+    price - discounts.where('start_time <= :now and end_time >= :now', now: Time.zone.now)
+                     .where(active: true)
+                     .sum(:discount)
+  end
 end

@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_205130) do
 
   create_table "orders", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "order_no"
+    t.string "order_no", null: false
     t.string "status"
     t.bigint "shipping_address_id", null: false
     t.bigint "invoice_address_id", null: false
