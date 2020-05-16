@@ -9,23 +9,11 @@ module Api::V1
       render_with_meta(@cart.carts_products, include: [:product, :'product.brand', :'product.category'])
     end
 
-    # POST /cart/insert
-    def insert
-      @product = Product.find(params[:product_id])
-
-      raise "#{@product&.name} outstocked" if @product.stock_count < params[:amount]
-
-      ActiveRecord::Base.transaction do
-        if @cart.product_ids.include?(@product.id)
-          exist = @cart.carts_products.find_by(product_id: @product.id)
-          exist.update(amount: exist.amount + params[:amount])
-        else
-          CartsProduct.create(cart: @cart, product: @product, amount: params[:amount])
-        end
-
-        # @todo: think about it:
-        @product.update(stock_count: (@product.stock_count - params[:amount]))
-      end
+    # POST /cart/add_product
+    def add_product
+      # request body receiving int params as strings.
+      # that's way I use `.to_i`
+      @cart.add_product(params[:product_id], params[:amount].to_i)
 
       render_with_meta(@cart.carts_products)
     end

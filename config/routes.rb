@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
       resources :addresses, except: %i(new edit)
       get :cart, to: 'carts#show'
-      post :'cart/insert', to: 'carts#insert'
+      post :'cart/add_product', to: 'carts#add_product'
       resources :orders, except: %i(new edit destroy)
     end
   end

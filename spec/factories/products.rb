@@ -4,6 +4,8 @@ FactoryBot.define do
     name { Faker::Commerce.product_name }
     brand
     category
+    purchase_limit { rand(100) }
+    stock { rand(1000) }
 
     trait :with_specifications do
       specifications_attributes do

@@ -20,4 +20,8 @@ class Product < ApplicationRecord
                      .where(active: true)
                      .sum(:discount)
   end
+
+  def available_stock
+    stock - CartsProduct.sum(:amount)
+  end
 end

@@ -23,6 +23,13 @@ RSpec.describe 'Categories', type: :request do
       expect(response).to have_http_status(200)
       expect(JSON.parse(response.body).dig('data').length).to eq(10)
     end
+
+    it 'returns raw json!' do
+      get api_v1_categories_path, params: { style: 'raw' }, headers: { authorization: "Bearer #{public_access.token}" }
+
+      expect(response).to have_http_status(200)
+      expect(JSON.parse(response.body).dig('meta')).to be_nil
+    end
   end
 
   describe 'POST /api/v1/categories' do
