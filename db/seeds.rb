@@ -72,6 +72,6 @@ puts 'Creating sample products'.green
     name: Faker::Commerce.product_name,
     brand_id: Brand.order('random()').limit(1).first.id,
     category_id: Category.order('random()').limit(1).first.id,
-    stock_count: (1..100).to_a.sample
+    stock: (1..100).to_a.sample
   )
 end
