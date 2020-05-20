@@ -56,7 +56,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Authentication
 gem 'devise'
-gem 'doorkeeper'
+gem 'doorkeeper', '~> 5.3.2'
 gem 'doorkeeper-jwt'
 
 # Utilities
