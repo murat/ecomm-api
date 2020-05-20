@@ -18,4 +18,10 @@ class Cart < ApplicationRecord
 
     true
   end
+
+  def remove_product(product_id)
+    return false unless carts_products.find_by(product_id: product_id).destroy!
+
+    true
+  end
 end
