@@ -18,6 +18,12 @@ module Api::V1
       render_with_meta(@cart.carts_products)
     end
 
+    def remove_product
+      @cart.remove_product(params[:product_id])
+
+      render_with_meta(@cart.carts_products)
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.

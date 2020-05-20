@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       resources :addresses, except: %i(new edit)
       get :cart, to: 'carts#show'
       post :'cart/add_product', to: 'carts#add_product'
+      delete :'cart/remove_product/:product_id', to: 'carts#remove_product'
       resources :orders, except: %i(new edit destroy)
     end
   end
