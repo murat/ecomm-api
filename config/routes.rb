@@ -22,8 +22,11 @@ Rails.application.routes.draw do
 
       resources :addresses, except: %i(new edit)
       get :cart, to: 'carts#show'
-      post :'cart/add_product', to: 'carts#add_product'
-      delete :'cart/remove_product/:product_id', to: 'carts#remove_product'
+      post :'cart/add', to: 'carts#add'
+      delete :'cart/drop/:product_id', to: 'carts#drop', as: :cart_drop
+      put :'cart/update/:product_id', to: 'carts#update', as: :cart_update
+      put :'cart/increment/:product_id', to: 'carts#increment', as: :cart_increment
+      put :'cart/decrement/:product_id', to: 'carts#decrement', as: :cart_decrement
       resources :orders, except: %i(new edit destroy)
     end
   end

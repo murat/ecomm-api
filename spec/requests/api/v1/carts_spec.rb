@@ -23,9 +23,9 @@ RSpec.describe 'Carts', type: :request do
     end
   end
 
-  describe 'POST /cart/add_product' do
+  describe 'POST /cart/add' do
     it 'works!' do
-      post api_v1_cart_add_product_path, params: cart_products_params,
+      post api_v1_cart_add_path, params: cart_products_params,
                                          headers: { authorization: "Bearer #{public_access.token}" }
 
       expect(response).to have_http_status(200)

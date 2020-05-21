@@ -13,8 +13,4 @@ RSpec.describe Order, type: :model do
     it { should validate_presence_of(:order_no) }
     it { should validate_uniqueness_of(:order_no) }
   end
-
-  it 'should return the next_order_no' do
-    expect(order.next_order_no).to eq('ECOMM-10001')
-  end
 end
