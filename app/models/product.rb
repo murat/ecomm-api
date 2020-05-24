@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class Product < ApplicationRecord
+  extend FriendlyId
+  friendly_id :name, use: :slugged
+
   belongs_to :brand, optional: true
   belongs_to :category, optional: true
   has_many :images, as: :imageable, dependent: :destroy

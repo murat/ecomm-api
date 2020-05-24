@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'securerandom'
 
-class OrderCreateService
+class OrderService
   attr_reader :user, :cart, :products,
               :shipping_address, :invoice_address,
               :errors
@@ -29,7 +29,6 @@ class OrderCreateService
         shipping_address_id: shipping_address,
         invoice_address_id: invoice_address,
         user_id: user.id,
-        order_no: SecureRandom.uuid,
         status: initial_status
       )
       order.save!

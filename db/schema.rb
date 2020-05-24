@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_204903) do
+ActiveRecord::Schema.define(version: 2020_04_26_205130) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
-  create_table "addresses", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
     t.string "title"
     t.text "address"
     t.string "country"
@@ -29,23 +31,25 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
     t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
-  create_table "brands", force: :cascade do |t|
+  create_table "brands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "slug"
     t.string "name", null: false
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_brands_on_slug", unique: true
   end
 
-  create_table "carts", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "carts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
   create_table "carts_products", force: :cascade do |t|
-    t.bigint "cart_id", null: false
-    t.bigint "product_id", null: false
+    t.uuid "cart_id", null: false
+    t.uuid "product_id", null: false
     t.integer "amount", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -53,17 +57,19 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
     t.index ["product_id"], name: "index_carts_products_on_product_id"
   end
 
-  create_table "categories", force: :cascade do |t|
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "ancestry"
     t.integer "position"
+    t.string "slug"
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ancestry"], name: "index_categories_on_ancestry"
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
   create_table "discounts", force: :cascade do |t|
-    t.bigint "product_id", null: false
+    t.uuid "product_id", null: false
     t.decimal "discount", null: false
     t.datetime "start_time"
     t.datetime "end_time"
@@ -76,14 +82,14 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
   create_table "images", force: :cascade do |t|
     t.string "file"
     t.string "imageable_type", null: false
-    t.bigint "imageable_id", null: false
+    t.uuid "imageable_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.bigint "resource_owner_id", null: false
+    t.uuid "resource_owner_id", null: false
     t.bigint "application_id", null: false
     t.string "token", null: false
     t.integer "expires_in", null: false
@@ -97,7 +103,7 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.bigint "resource_owner_id"
+    t.uuid "resource_owner_id"
     t.bigint "application_id"
     t.string "token", null: false
     t.string "refresh_token"
@@ -124,23 +130,21 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "order_no", null: false
+  create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
     t.string "status"
-    t.bigint "shipping_address_id", null: false
-    t.bigint "invoice_address_id", null: false
+    t.uuid "shipping_address_id", null: false
+    t.uuid "invoice_address_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["invoice_address_id"], name: "index_orders_on_invoice_address_id"
-    t.index ["order_no"], name: "index_orders_on_order_no", unique: true
     t.index ["shipping_address_id"], name: "index_orders_on_shipping_address_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "orders_products", force: :cascade do |t|
-    t.bigint "order_id", null: false
-    t.bigint "product_id", null: false
+    t.uuid "order_id", null: false
+    t.uuid "product_id", null: false
     t.integer "amount"
     t.decimal "price"
     t.datetime "created_at", precision: 6, null: false
@@ -149,22 +153,24 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
     t.index ["product_id"], name: "index_orders_products_on_product_id"
   end
 
-  create_table "products", force: :cascade do |t|
+  create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "slug"
     t.string "name", null: false
     t.text "description"
-    t.bigint "brand_id"
-    t.bigint "category_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.decimal "price", default: "0.0"
     t.integer "stock", default: 0, null: false
-    t.integer "purchase_limit", default: 0
+    t.integer "purchase_limit", default: 0, null: false
+    t.uuid "brand_id"
+    t.uuid "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["brand_id"], name: "index_products_on_brand_id"
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
   create_table "specifications", force: :cascade do |t|
-    t.bigint "product_id"
+    t.uuid "product_id"
     t.integer "position"
     t.string "spec_key"
     t.string "spec_val"
@@ -177,7 +183,7 @@ ActiveRecord::Schema.define(version: 2020_05_16_204903) do
     t.index ["spec_val"], name: "index_specifications_on_spec_val"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "surname", default: "", null: false
     t.string "phone", default: "", null: false

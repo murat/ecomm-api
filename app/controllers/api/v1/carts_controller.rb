@@ -14,37 +14,27 @@ module Api::V1
 
     # POST /cart/add
     def add
-      cart_service.add(params[:product_id], params[:amount].to_i)
-
-      render_with_meta(service.products)
+      render_with_meta(cart_service.products) if cart_service.add(params[:product_id], params[:amount].to_i)
     end
 
     # DELETE /cart/drop/:product_id
     def drop
-      cart_service.drop(params[:product_id])
-
-      head :ok
+      head :ok if cart_service.drop(params[:product_id])
     end
 
     # PUT /cart/update/:product_id
     def update
-      cart_service.update(params[:product_id], params[:amount].to_i)
-
-      head :ok
+      head :ok if cart_service.update(params[:product_id], params[:amount].to_i)
     end
 
     # PUT /cart/increment/:product_id
     def increment
-      cart_service.update(params[:product_id])
-
-      head :ok
+      head :ok if cart_service.increment(params[:product_id])
     end
 
     # PUT /cart/decrement/:product_id
     def decrement
-      cart_service.update(params[:product_id])
-
-      head :ok
+      head :ok if cart_service.decrement(params[:product_id])
     end
   end
 end

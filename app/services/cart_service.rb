@@ -18,31 +18,31 @@ class CartService
 
     p.assign_attributes(amount: amount)
 
-    return false unless p.save!
+    p.save!
 
     true
   end
 
   def update(product_id, amount)
-    return false unless cart_product(product_id).update!(amount: amount)
+    cart_product(product_id).update!(amount: amount)
 
     true
   end
 
   def increment(product_id)
-    return false unless cart_product(product_id).increment!(:amount, 1)
+    cart_product(product_id).increment!(:amount, 1)
 
     true
   end
 
   def decrement(product_id)
-    return false unless cart_product(product_id).decrement!(:amount, 1)
+    cart_product(product_id).decrement!(:amount, 1)
 
     true
   end
 
   def remove(product_id)
-    return false unless cart_product(product_id).destroy!
+    cart_product(product_id).destroy!
 
     true
   end

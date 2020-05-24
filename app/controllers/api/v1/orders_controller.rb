@@ -19,7 +19,7 @@ module Api::V1
     # POST /orders
     def create
       order =
-        OrderCreateService.new(
+        OrderService.new(
           current_user,
           shipping_address: order_params[:shipping_address_id],
           invoice_address: order_params[:invoice_address_id]
