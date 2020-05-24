@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 Doorkeeper::Application.create(name: 'ecomm', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', confidential: false, scopes: %w(read write admin))
 
-puts 'Creating sample user'.green
-User.create(name: 'murat', surname: 'bastas', phone: '05555555555', email: 'muratbsts@gmail.com', password: 'password', password_confirmation: 'password')
-User.first.confirm
+puts 'Creating sample user'
+user = User.create(name: 'murat', surname: 'bastas', phone: '05555555555', email: 'muratbsts@gmail.com', password: 'password', password_confirmation: 'password')
+user.confirm
 
-puts 'Creating sample categories'.green
+puts 'Creating address for user'
+Address.create(FactoryBot.attributes_for(:address, user_id: user.id))
+
+puts 'Creating sample categories'
 category_yaml =
   <<-TEXT
   Elektronik:
@@ -54,7 +57,7 @@ rescue StandardError => e
   pp e.inspect
 end
 
-puts 'Creating sample brands'.green
+puts 'Creating sample brands'
 brands = ['3M', 'Alienware', 'Amazon', 'AMD', 'Analog Devices', 'Apple', 'Audiovox',
           'Avaya', 'Averatec', 'Bose', 'Cisco Systems', 'Crucial Technology', 'Dell',
           'eMachines', 'Emerson Electric', 'Emerson Radio', 'Fitbit', 'Gateway',
@@ -66,7 +69,7 @@ brands = ['3M', 'Alienware', 'Amazon', 'AMD', 'Analog Devices', 'Apple', 'Audiov
           'Western Digital', 'Westinghouse Electric Corporation', 'Xerox', 'Zenith']
 brands.each(&->(b) { Brand.find_or_create_by(name: b) })
 
-puts 'Creating sample products'.green
+puts 'Creating sample products'
 30.times do |_n|
   Product.create(
     name: Faker::Commerce.product_name,

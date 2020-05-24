@@ -7,6 +7,8 @@ class InsufficientStockError < StandardError
   end
 
   def message
-    "only #{available_stock} product available"
+    return "only #{available_stock} product available" if available_stock.positive?
+
+    'product is out stocked'
   end
 end

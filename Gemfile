@@ -63,5 +63,6 @@ gem 'doorkeeper-jwt'
 gem 'ancestry'
 gem 'acts_as_list'
 gem 'kaminari'
+gem 'friendly_id', '~> 5.3'
 
 gem 'fast_jsonapi'

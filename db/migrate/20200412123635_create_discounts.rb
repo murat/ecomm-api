@@ -2,7 +2,7 @@
 class CreateDiscounts < ActiveRecord::Migration[6.0]
   def change
     create_table :discounts do |t|
-      t.references :product, null: false, foreign_key: true
+      t.references :product, null: false, foreign_key: true, type: :uuid
       t.decimal :discount, null: false
       t.datetime :start_time
       t.datetime :end_time
