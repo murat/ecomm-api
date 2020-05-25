@@ -6,8 +6,4 @@ class CartsProduct < ApplicationRecord
   def available_stock
     product.available_stock + amount
   end
-
-  def is_available?
-    available_stock >= amount
-  end
 end

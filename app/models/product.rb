@@ -9,7 +9,10 @@ class Product < ApplicationRecord
 
   has_many :specifications, inverse_of: :product, dependent: :destroy
   accepts_nested_attributes_for :specifications, allow_destroy: true
-  has_many :discounts, inverse_of: :product, dependent: :destroy
+  has_many :all_discounts, class_name: 'Discount', inverse_of: :product, dependent: :destroy
+  has_many :discounts,
+           -> { where('start_time <= :now and end_time >= :now', now: Time.now.utc).where(active: true).order(discount: :asc) },
+           inverse_of: :product
   accepts_nested_attributes_for :discounts, allow_destroy: true
 
   has_many :orders_products, dependent: :restrict_with_error
@@ -19,9 +22,9 @@ class Product < ApplicationRecord
   validates :price, presence: true
 
   def discounted_price
-    price - discounts.where('start_time <= :now and end_time >= :now', now: Time.zone.now)
-                     .where(active: true)
-                     .sum(:discount)
+    discounts.reduce(price) do |m, x|
+      m - m * x.discount / 100.to_f
+    end
   end
 
   def available_stock

@@ -2,9 +2,9 @@
 FactoryBot.define do
   factory :discount do
     product
-    discount { '9.99' }
-    start_time { '2020-04-12 15:36:35' }
-    end_time { '2020-04-12 15:36:35' }
+    discount { (0..50).to_a.sample }
+    start_time { Time.now.utc - 2.days }
+    end_time { Time.now.utc + 3.days }
     active { true }
   end
 end
